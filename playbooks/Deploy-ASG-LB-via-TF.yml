@@ -1,8 +1,8 @@
---
+---
 - name: Deploy resources via Terraform
   hosts: localhost
   tasks:
-    - name: Terraform plan
+    - name: Terraform apply
       cloud.terraform.terraform:
         project_path: ../terraform/
         state: present
