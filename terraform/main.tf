@@ -1,3 +1,14 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "6.2.0"
+    }
+  }
+
+  backend "s3" {}
+}
+
 # Data source for availability zones
 data "aws_availability_zones" "available" {}
 
