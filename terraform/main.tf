@@ -14,7 +14,7 @@ data "aws_availability_zones" "available" {}
 
 # Provider
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
 }
 
 # Variables
