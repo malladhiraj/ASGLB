@@ -152,7 +152,7 @@ resource "aws_autoscaling_group" "example" {
   min_size             = 2
   vpc_zone_identifier  = aws_subnet.subnet[*].id
   launch_template {
-    id = aws_launch_configuration.example.id
+    id = aws_launch_template.example.id
     version = "$Latest"
 }
 
