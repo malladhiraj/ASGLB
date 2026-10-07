@@ -31,7 +31,7 @@ variable "instance_type" {
 }
 
 variable "ami_id" {
-  default = "ami-0182f373e66f89c85" # Provided AMI ID
+  default = "ami-0d3d85815a9746bc5" # Provided AMI ID ami-0182f373e66f89c85 us east1
 }
 
 # VPC
