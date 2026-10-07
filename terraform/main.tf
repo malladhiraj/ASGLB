@@ -117,15 +117,28 @@ resource "aws_security_group" "allow_http" {
 }
 
 # Launch Configuration
-resource "aws_launch_configuration" "example" {
-  name          = "pluralsight-lc"
+resource "aws_launch_template" "example" {
+  name_prefix          = "pluralsight-lc"
   image_id      = var.ami_id
   instance_type = var.instance_type
-  security_groups = [aws_security_group.allow_http.id]
-  associate_public_ip_address = true
+  vpc_security_groups_ids = [aws_security_group.allow_http.id]
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups = [
+      aws_security_group.allow_http.id
+    ]
+  }
 
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "pluralsight-instance"
+    }
+}
   lifecycle {
     create_before_destroy = true
+    
   }
 }
 
@@ -135,7 +148,10 @@ resource "aws_autoscaling_group" "example" {
   max_size             = 3
   min_size             = 2
   vpc_zone_identifier  = aws_subnet.subnet[*].id
-  launch_configuration = aws_launch_configuration.example.id
+  launch_template {
+    id = aws_launch_configuration.example.id
+    version = "$Latest"
+}
 
   tag {
     key                 = "Name"
