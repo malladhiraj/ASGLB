@@ -121,7 +121,7 @@ resource "aws_launch_template" "example" {
   name_prefix          = "pluralsight-lc"
   image_id      = var.ami_id
   instance_type = var.instance_type
-  vpc_security_groups_ids = [
+  vpc_security_group_ids = [
     aws_security_group.allow_http.id
   ]
 
