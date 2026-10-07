@@ -121,7 +121,10 @@ resource "aws_launch_template" "example" {
   name_prefix          = "pluralsight-lc"
   image_id      = var.ami_id
   instance_type = var.instance_type
-  vpc_security_groups_ids = [aws_security_group.allow_http.id]
+  vpc_security_groups_ids = [
+    aws_security_group.allow_http.id
+  ]
+
   network_interfaces {
     associate_public_ip_address = true
     security_groups = [
