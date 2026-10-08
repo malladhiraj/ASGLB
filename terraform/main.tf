@@ -1,20 +1,9 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "6.2.0"
-    }
-  }
-
-  backend "s3" {}
-}
-
 # Data source for availability zones
 data "aws_availability_zones" "available" {}
 
 # Provider
 provider "aws" {
-  region = "us-east-2"
+  region = "us-east-1"
 }
 
 # Variables
@@ -31,7 +20,7 @@ variable "instance_type" {
 }
 
 variable "ami_id" {
-  default = "ami-0d3d85815a9746bc5" # Provided AMI ID ami-0182f373e66f89c85 us east1
+  default = "ami-0182f373e66f89c85" # Provided AMI ID
 }
 
 # VPC
@@ -117,23 +106,15 @@ resource "aws_security_group" "allow_http" {
 }
 
 # Launch Configuration
-resource "aws_launch_template" "example" {
-  name_prefix          = "pluralsight-lc"
+resource "aws_launch_configuration" "example" {
+  name          = "pluralsight-lc"
   image_id      = var.ami_id
   instance_type = var.instance_type
-  vpc_security_group_ids = [
-    aws_security_group.allow_http.id
-  ]
-  tag_specifications {
-    resource_type = "instance"
+  security_groups = [aws_security_group.allow_http.id]
+  associate_public_ip_address = true
 
-    tags = {
-      Name = "pluralsight-instance"
-    }
-}
   lifecycle {
     create_before_destroy = true
-    
   }
 }
 
@@ -143,10 +124,7 @@ resource "aws_autoscaling_group" "example" {
   max_size             = 3
   min_size             = 2
   vpc_zone_identifier  = aws_subnet.subnet[*].id
-  launch_template {
-    id = aws_launch_template.example.id
-    version = "$Latest"
-}
+  launch_configuration = aws_launch_configuration.example.id
 
   tag {
     key                 = "Name"
